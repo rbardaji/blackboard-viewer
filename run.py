@@ -30,4 +30,4 @@ def make_output_div(providers):
     return [c.provider_tabs(provider) for provider in providers]
 
 if __name__ == '__main__':
-    app.run_server(socket.socket.gethostbyname(), 5050, debug=True)
+    app.run_server(socket.gethostbyname(), 5050, debug=True)
