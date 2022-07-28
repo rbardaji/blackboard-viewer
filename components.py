@@ -1,7 +1,17 @@
+from turtle import st
+import requests
 from dash import html, dcc
 
 import yaml_service
-import text
+# import text
+
+# Get information from The Blackboard
+response = requests.get('http://eoscfuture.emso.eu:5000/dashboard/1')
+if response.status_code == 200:
+    result = response.json()
+    title = result['title']
+    subtitle = result['subtitle']
+    logo = result['logo']
 
 # Init DTOs
 YDTO = yaml_service.YamlDataTransferObject()
@@ -27,17 +37,17 @@ main_layout = html.Div(
                 html.Div(
                     # className='flex-child-image',
                     children=[
-                        html.Img(
-                            # className='header-image',
-                            src='/assets/eosc-future.svg'
+                        html.Embed(
+                            className='header-logo',
+                            src=logo
                         )
                     ]
                 ),
                 html.Div(
                     className='flex-child-headings',
                     children=[
-                        html.H1(text.title),
-                        html.H2(text.subtitle)
+                        html.H1(title, style={'margin-bottom': '0px'}),
+                        html.H2(subtitle, style={'margin-top': '0.5px'})
                     ]
                 )
             ]
