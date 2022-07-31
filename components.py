@@ -1,4 +1,3 @@
-from turtle import st
 import requests
 from dash import html, dcc
 
