@@ -1,11 +1,14 @@
+from turtle import st
 import requests
 from dash import html, dcc
 
 import yaml_service
 # import text
 
+# blackboard_host = 'http://DESKTOP-VHEVVKU:5000'
+blackboard_host = 'http://eoscfuture.emso.eu:5000'
 # Get information from The Blackboard
-response = requests.get('http://eoscfuture.emso.eu:5000/dashboard/1')
+response = requests.get(f'{blackboard_host}/dashboard/1')
 if response.status_code == 200:
     result = response.json()
     title = result['title']
@@ -14,7 +17,7 @@ if response.status_code == 200:
     frames = result['frames']
     frame_info_dict = {}
     for frame in frames:
-        response = requests.get(f'http://eoscfuture.emso.eu:5000/frame/{frame}')
+        response = requests.get(f'{blackboard_host}/frame/{frame}')
         if response.status_code == 200:
             result = response.json()
             frame_info_dict[result['SD_provider_abbreviation']] = result
@@ -96,7 +99,7 @@ def provider_dropdown(provider):
         placeholder=f'Select {provider}'
     )
 
-def provider_iframe(link):
+def provider_iframe(link, height, width):
 
     if link.split('.')[-1] in ['png', 'jpg']:
         return html.Img(
@@ -110,6 +113,7 @@ def provider_iframe(link):
         return html.Iframe(
             # id=f'{provider}-iframe',
             className='provider-iframe',
+            style={'height': height, 'width': width},
             src=link
         )
 
@@ -155,17 +159,51 @@ def provider_contact(provider):
 
 def provider_frame(provider):
 
+    height = frame_info_dict[provider]["SD_height"]
+    width = frame_info_dict[provider]["SD_width"]
+
+    if 'px' in height:
+        height_number = int(height.split('px')[0])
+        width_number = int(width.split('px')[0])
+
+        iframe_height = f'{height_number - 2}px'
+        iframe_width = f'{width_number - 2}px'
+
+    elif 'rem' in height:
+        height_number = float(height.split('rem')[0])
+        width_number = float(width.split('rem')[0])
+
+        iframe_height = f'{height_number - 10.7}rem'
+        iframe_width = f'{width_number - 1.5}rem'
+
+    elif 'rm' in height:
+        height_number = float(height.split('rm')[0])
+        width_number = float(width.split('rm')[0])
+
+        iframe_height = f'{height_number - 2}rm'
+        iframe_width = f'{width_number - 2}rm'
+
     return html.Div(
         className='provider-frame',
+        style={
+            'height':f'{frame_info_dict[provider]["SD_height"]}',
+            'width':f'{frame_info_dict[provider]["SD_width"]}'
+        },
         children=[
             provider_title(provider),
             provider_dropdown(provider),
             html.Div(
                 id=f'{provider}-iframe',
+                style={
+                    'height':f'{height}',
+                    'width':f'{width}'
+                },
                 children=[
                     provider_iframe(
                         frame_info_dict[provider]['SD_URL']['base_url'] + \
-                        frame_info_dict[provider]['SD_URL']['parameters'][0]['value']
+                        frame_info_dict[provider]['SD_URL']['parameters'][0]['value'],
+                        iframe_height,
+                        iframe_width
                     ),
                 ]
             ),

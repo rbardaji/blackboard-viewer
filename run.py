@@ -45,7 +45,36 @@ for provider in c.frame_info_dict:
         """
         if parameter is None:
             raise PreventUpdate
-        return c.provider_iframe(provider, parameter)
+        # Search for the provider, THIS MUST BE CHANGED
+        provider_call = ''
+        for provider_search in c.frame_info_dict:
+            if c.frame_info_dict[provider_search]["SD_URL"]["base_url"] in parameter:
+                provider_call = provider_search
+                break
+        height = c.frame_info_dict[provider_call]['SD_height']
+        width = c.frame_info_dict[provider_call]['SD_width']
+        if 'px' in height:
+            height_number = int(height.split('px')[0])
+            width_number = int(width.split('px')[0])
+
+            iframe_height = f'{height_number - 2}px'
+            iframe_width = f'{width_number - 2}px'
+
+        elif 'rem' in height:
+            height_number = float(height.split('rem')[0])
+            width_number = float(width.split('rem')[0])
+
+            iframe_height = f'{height_number - 10.7}rem'
+            iframe_width = f'{width_number - 1.5}rem'
+
+        elif 'rm' in height:
+            height_number = float(height.split('rm')[0])
+            width_number = float(width.split('rm')[0])
+
+            iframe_height = f'{height_number - 2}rm'
+            iframe_width = f'{width_number - 2}rm'
+
+        return c.provider_iframe(parameter, iframe_height, iframe_width)
 
 
 if __name__ == '__main__':
