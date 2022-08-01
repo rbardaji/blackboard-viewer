@@ -1,11 +1,7 @@
 import requests
 from dash import html, dcc
+from config import blackboard_host
 
-import yaml_service
-# import text
-
-# blackboard_host = 'http://DESKTOP-VHEVVKU:5000'
-blackboard_host = 'http://eoscfuture.emso.eu:5000'
 # Get information from The Blackboard
 response = requests.get(f'{blackboard_host}/dashboard/1')
 if response.status_code == 200:

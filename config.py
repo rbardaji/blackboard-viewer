@@ -17,3 +17,5 @@ mandatory_yaml_keys = {
 
 # Language
 language = 'en'
+
+blackboard_host = 'http://eoscfuture.emso.eu:5000'
