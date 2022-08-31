@@ -157,6 +157,7 @@ def provider_frame(provider):
     height = frame_info_dict[provider]["SD_height"]
     width = frame_info_dict[provider]["SD_width"]
 
+
     if 'px' in height:
         height_number = int(height.split('px')[0])
         width_number = int(width.split('px')[0])

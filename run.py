@@ -46,6 +46,7 @@ for provider in c.frame_info_dict:
         if parameter is None:
             raise PreventUpdate
         # Search for the provider, THIS MUST BE CHANGED
+        
         provider_call = ''
         for provider_search in c.frame_info_dict:
             if c.frame_info_dict[provider_search]["SD_URL"]["base_url"] in parameter:
